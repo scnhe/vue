@@ -3,10 +3,150 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>vue</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title>vue test</title>
+    <style>
+    .green{
+      height: 50px;
+      width: 100%;
+      background-color: green;
+    }
+    .red{
+      height: 50px;
+      width: 100%;
+      background: red;
+    }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
+    <!--声明式渲染-->
+    <div id="app">
+      <!--不要把模板放到div作用域外面-->
+        <h1>{{ message }}</h1>
+    </div>
+    <div id="app-2">
+      <!--:title 简写-->
+      <span v-bind:title="message">鼠标悬停几秒查看此处动态绑定提示信息</span>
+    </div>
+    <!--条件与循环-->
+    <div id="app-3">
+      <p v-if="seen">现在看到你了</p>
+    </div>
+
+    <div id="app-4">
+        <ol>
+          <li v-for="todo in todos">{{todo.text}}</li>
+        </ol>
+    </div>
+    <!--处理用户输入 v-on 给DOM增加事件监听器-->
+    <div id="app-5">
+      <p>{{ message }}</p>
+      <p>{{ reverseMessage2 }}</p>
+      <!--简写 @click-->
+      <button v-on:click="reverseMessage">反转消息</button>
+    </div>
+    <div id="app-6">
+      <h3>应用Vue组件</h3>
+      <ol>
+        <todo-item v-for="item in lists" v-bind:todo="item" v-bind:key="item.id"></todo-item>
+      </ol>
+    </div>
+    <div id="app-bind" class="green" v-bind:class="{red:isRed}">
+
+    </div>
+    <div id="app8">
+      <h1 v-if="show">show {{show}}</h1>
+      <h1 v-else>ha ha ha</h1>
+    </div>
+    <!--组件化应用构建-->
+    <!--Vue组件注册-->
+
+    <script>
+      //Vue实例通过New创建
+      //只有当实例被创建时data中的属性才是响应式的，如果后期需要新属性可以先设置初值
+      var app = new Vue({
+        el: '#app',
+        data :{
+          message: 'Hello Vue'
+        }
+      })
+      var app2 = new Vue({
+        el:"#app-2",
+        data:{
+          message:'页面加在于 ' + new Date().toLocaleString()
+        }
+      })
+      var app3 = new Vue({
+        el:"#app-3",
+        data:{
+          seen: false
+        }
+      })
+
+      var app4 = new Vue({
+        el:"#app-4",
+        data:{
+          todos: [
+            {text:"首页"},
+            {text:"登陆"}
+          ]
+        }
+      })
+      var app5 = new Vue(
+        {
+          el:"#app-5",
+          data:{
+            message:"Hello, Vue"
+          },
+          // Warning data field finished
+          methods:{
+            reverseMessage:function(){
+              this.message = this.message.split(' ').reverse().join(' ')
+            }
+          },
+          // 计算属性,与方法的区别在于缓存，message未发生变化计算属性直接返回缓存
+          computed:{ 
+            //getter method
+              reverseMessage2 :function() {
+                return this.message = this.message.split(' ').reverse().join(' ')
+              }
+            }
+        }
+      )
+      
+      Vue.component('todo-item',{
+        props:['todo'],
+        template:'<li>{{ todo.text}}</li>'
+      })
+
+      var app6 = new Vue(
+        {
+          el:'#app-6',
+          data:{
+            lists:[
+              {id:0, text:"用户管理"},
+              {id:1, text:"设备管理"}
+            ]
+          }
+
+        }
+      )
+      var app7 = new Vue(
+        {
+          el:"#app-bind",
+          data:{
+            isRed:false
+          }
+        }
+      )
+      var app8 = new Vue(
+        {
+          el:"#app8",
+          data:{
+            show:"show me message"
+          }
+        }
+      )
+    </script>
   </body>
 </html>
